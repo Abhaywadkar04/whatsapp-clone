@@ -15,9 +15,11 @@ import { toast } from "sonner";
 import apiClient from "@/lib/api-client";
 import { LOGIN_ROUTE, SIGNUP_ROUTE } from "@/utlis/constants";
 import { useNavigate } from "react-router-dom";
+import { useAppStore } from "@/store";
 
 const Auth = () => {
   const navigate = useNavigate();
+  const {setUserInfo}=useAppStore()
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
   const [ConfirmPassword, setConfirmPassword] = useState("");
@@ -63,6 +65,7 @@ const Auth = () => {
         }
       );
       if (response.data.user.id) {
+        setUserInfo(response.data.user);
         if (response.data.user.profileSetup) {
           navigate("/chat");
         } else {
@@ -86,6 +89,8 @@ const Auth = () => {
         }
       );
       if (response.status === 201) {
+        setUserInfo(response.data.user);
+
         toast.success("Account created successfully");
         navigate("/profile");
       }
